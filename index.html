@@ -11,4 +11,60 @@
     <p>testP</p>
     <p>SPSE rozvrh</p>
 </body>
+<script>
+    fetch('https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Class/2F')
+  .then(response => response.text())
+  .then(html => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const elements = doc.querySelectorAll('.day-item-hover');
+    //číslo hodiny
+    const date = new Date();
+    const hour = date.getHours();
+    const min = date.getMinutes();
+    const secondElement = elements[5];
+    let den2 = hour +" : "+ min;
+    
+    
+
+
+    const dataDetail = secondElement ? secondElement.getAttribute('data-detail') : null;
+
+    //console.log(dataDetail);
+    let data = dataDetail;
+    let bez = data.slice(data.indexOf("|")+2)
+    let bez2 = bez.slice(bez.indexOf(",")+1)
+    let bez3 = bez2.slice(bez2.indexOf(",")+1)
+    let bez4 = bez3.slice(bez3.indexOf(",")+1)
+    console.log(data)
+    
+    //předmět
+    let predmet = data.slice(30, data.indexOf("|") -1);
+    //den a datum
+    let den = bez.slice(0,bez.indexOf("|")-1)
+    //hodina a rozsah
+    let hodina = bez.slice(bez.indexOf("|")+2,bez.indexOf(",")-1)
+    //ucitel
+    let ucitel = bez2.slice(bez2.indexOf("teacher")+10,bez2.indexOf(",")-1)
+    //mistnost
+    let mistnost = bez3.slice(bez3.indexOf("room")+7,bez3.indexOf(",")-1)
+    //skupina
+    let skupina = bez4.slice(bez4.indexOf("group")+8,bez4.indexOf(",")-1)
+    if(skupina.length==0)skupina="Všichni"
+
+    alert(den2)
+    alert(den)
+    
+    
+    console.log("předmět = "+predmet)
+    console.log("den = "+den)
+    console.log("hodina = "+hodina)
+    console.log("učitel = "+ucitel)
+    console.log("místnost = "+mistnost)
+    console.log("skupina = "+skupina)
+
+  })
+  .catch(error => console.error('Chyba při načítání stránky:', error));
+</script>
 </html>
