@@ -11,7 +11,22 @@ header h1{
     padding: 1.5rem;
     font-size: 3rem;
 }
-select{
-    margin: 2rem;
-    font-size: 2rem;
+#vyber{
+    display: flex;
+    background-color: antiquewhite;
+    padding: 1rem;
+    gap: 2rem;
+}
+.vyber-div{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.vyber-div p{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.vyber-div select{
+    font-size: 1.5rem;
+    border-radius: 5px;
 }

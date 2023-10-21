@@ -7,17 +7,53 @@ async function getData() {
     console.error("Chyba pri nacitani stranky: " + error);
   }
   let classSelector = document.querySelector("#selectedClass");
+  let teacherSelector = document.querySelector("#selectedTeacher");
+  let roomSelector = document.querySelector("#selectedRoom");
+  let url;
+
   classSelector.addEventListener("change", (event) => {
-    console.log(event.target.value);
-    alert(event.target.value);
+    url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Class/" + event.target.value;
+    teacherSelector.options.selectedIndex = 0;
+    roomSelector.options.selectedIndex = 0;
   });
+  teacherSelector.addEventListener("change", (event) => {
+    url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Teacher/" + event.target.value;
+    classSelector.options.selectedIndex = 0;
+    roomSelector.options.selectedIndex = 0;
+  });
+  roomSelector.addEventListener("change", (event) => {
+    url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Room/" + event.target.value;
+    classSelector.options.selectedIndex = 0;
+    teacherSelector.options.selectedIndex = 0;
+  })
+
 }
 async function parseData(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
-  let fetchList = doc.querySelector("#selectedClass").cloneNode(true);
-  fetchList.removeAttribute("onchange");
+
+  let fetchClass = doc.querySelector("#selectedClass").cloneNode(true);
+  fetchClass.removeAttribute("onchange");
+  fetchClass.removeAttribute("class");
   let classSelector = document.querySelector("#classSelector");
-  classSelector.replaceWith(fetchList);
+  classSelector.replaceWith(fetchClass);
+
+  let fetchTeacher = doc.querySelector("#selectedTeacher").cloneNode(true);
+  fetchTeacher.removeAttribute("onchange");
+  fetchTeacher.removeAttribute("class")
+  let teacherSelector = document.querySelector("#teacherSelector");
+  teacherSelector.replaceWith(fetchTeacher);
+
+  let fetchRoom = doc.querySelector("#selectedRoom").cloneNode(true);
+  fetchRoom.removeAttribute("onchange");
+  fetchRoom.removeAttribute("class");
+  let roomSelector = document.querySelector("#roomSelector");
+  roomSelector.replaceWith(fetchRoom);
+}
+async function parseTimetable(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+
 }
 getData();
