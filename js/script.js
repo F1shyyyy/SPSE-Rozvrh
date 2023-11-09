@@ -13,16 +13,25 @@ async function getData() {
 
   classSelector.addEventListener("change", (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Class/" + event.target.value;
+    if (event.target.value !== "") {
+      parseTimetable(url);
+    }
     teacherSelector.options.selectedIndex = 0;
     roomSelector.options.selectedIndex = 0;
   });
   teacherSelector.addEventListener("change", (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Teacher/" + event.target.value;
+    if (event.target.value !== "") {
+      parseTimetable(url);
+    }
     classSelector.options.selectedIndex = 0;
     roomSelector.options.selectedIndex = 0;
   });
   roomSelector.addEventListener("change", (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Room/" + event.target.value;
+    if (event.target.value !== "") {
+      parseTimetable(url);
+    }
     classSelector.options.selectedIndex = 0;
     teacherSelector.options.selectedIndex = 0;
   })
@@ -53,7 +62,5 @@ async function parseData(html) {
 async function parseTimetable(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
-
-
 }
 getData();
