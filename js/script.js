@@ -11,48 +11,72 @@ async function getData() {
   let roomSelector = document.querySelector("#selectedRoom");
   let url;
 
-  classSelector.addEventListener("change", (event) => {
+  classSelector.addEventListener("change", async (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Class/" + event.target.value;
     if (event.target.value !== "") {
-      parseTimetable(url);
+      try {
+        let data = await fetch(url);
+        data = await data.text();
+        await parseTimetable(data);
+      } catch (error) {
+        console.error("Chyba pri nacitani stranky: " + error);
+      }
     }
     teacherSelector.options.selectedIndex = 0;
     roomSelector.options.selectedIndex = 0;
   });
-  teacherSelector.addEventListener("change", (event) => {
+  teacherSelector.addEventListener("change", async (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Teacher/" + event.target.value;
     if (event.target.value !== "") {
-      parseTimetable(url);
+      try {
+        let data = await fetch(url);
+        data = await data.text();
+        await parseTimetable(data);
+      } catch (error) {
+        console.error("Chyba pri nacitani stranky: " + error);
+      }
     }
     classSelector.options.selectedIndex = 0;
     roomSelector.options.selectedIndex = 0;
   });
-  roomSelector.addEventListener("change", (event) => {
+  roomSelector.addEventListener("change", async (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Room/" + event.target.value;
     if (event.target.value !== "") {
-      parseTimetable(url);
+      try {
+        let data = await fetch(url);
+        data = await data.text();
+        await parseTimetable(data);
+      } catch (error) {
+        console.error("Chyba pri nacitani stranky: " + error);
+      }
     }
     classSelector.options.selectedIndex = 0;
     teacherSelector.options.selectedIndex = 0;
   })
 
 }
+
+// Fetch HTML page from src
 async function parseData(html) {
+  // Parses the HTML code into text
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
 
+  // Fetches a list of Classes from src
   let fetchClass = doc.querySelector("#selectedClass").cloneNode(true);
   fetchClass.removeAttribute("onchange");
   fetchClass.removeAttribute("class");
   let classSelector = document.querySelector("#classSelector");
   classSelector.replaceWith(fetchClass);
 
+  // Fetches a list of Teachers from src
   let fetchTeacher = doc.querySelector("#selectedTeacher").cloneNode(true);
   fetchTeacher.removeAttribute("onchange");
   fetchTeacher.removeAttribute("class")
   let teacherSelector = document.querySelector("#teacherSelector");
   teacherSelector.replaceWith(fetchTeacher);
 
+  // Fetches a list of Rooms from src
   let fetchRoom = doc.querySelector("#selectedRoom").cloneNode(true);
   fetchRoom.removeAttribute("onchange");
   fetchRoom.removeAttribute("class");
@@ -60,7 +84,14 @@ async function parseData(html) {
   roomSelector.replaceWith(fetchRoom);
 }
 async function parseTimetable(html) {
+  // Parses the HTML code into text
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
+
+  const cells = doc.querySelectorAll(".day-item-hover");
+  console.log(cells)
+  for (const cell of cells) {
+    console.log(cell);
+  }
 }
 getData();
