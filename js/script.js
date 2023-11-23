@@ -91,7 +91,7 @@ async function parseTimetable(html) {
   const cells = doc.querySelectorAll(".day-item-hover");
   console.log(cells)
   for (const cell of cells) {
-    console.log(cell);
+    console.log(JSON.parse(cell.dataset.detail));
   }
 }
 getData();
