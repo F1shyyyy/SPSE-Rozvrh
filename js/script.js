@@ -1,4 +1,4 @@
-async function getData() {
+ async function getData() {
   try {
     let data = await fetch("https://bakalari.spse.cz/bakaweb/Timetable/Public/");
     data = await data.text();
@@ -14,13 +14,7 @@ async function getData() {
   classSelector.addEventListener("change", async (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Class/" + event.target.value;
     if (event.target.value !== "") {
-      try {
-        let data = await fetch(url);
-        data = await data.text();
-        await parseTimetable(data);
-      } catch (error) {
-        console.error("Chyba pri nacitani stranky: " + error);
-      }
+      await fetchURL(url);
     }
     teacherSelector.options.selectedIndex = 0;
     roomSelector.options.selectedIndex = 0;
@@ -28,13 +22,7 @@ async function getData() {
   teacherSelector.addEventListener("change", async (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Teacher/" + event.target.value;
     if (event.target.value !== "") {
-      try {
-        let data = await fetch(url);
-        data = await data.text();
-        await parseTimetable(data);
-      } catch (error) {
-        console.error("Chyba pri nacitani stranky: " + error);
-      }
+      await fetchURL(url);
     }
     classSelector.options.selectedIndex = 0;
     roomSelector.options.selectedIndex = 0;
@@ -42,13 +30,7 @@ async function getData() {
   roomSelector.addEventListener("change", async (event) => {
     url = "https://bakalari.spse.cz/bakaweb/Timetable/Public/Actual/Room/" + event.target.value;
     if (event.target.value !== "") {
-      try {
-        let data = await fetch(url);
-        data = await data.text();
-        await parseTimetable(data);
-      } catch (error) {
-        console.error("Chyba pri nacitani stranky: " + error);
-      }
+      await fetchURL(url);
     }
     classSelector.options.selectedIndex = 0;
     teacherSelector.options.selectedIndex = 0;
@@ -83,15 +65,25 @@ async function parseData(html) {
   let roomSelector = document.querySelector("#roomSelector");
   roomSelector.replaceWith(fetchRoom);
 }
+async function fetchURL(url) {
+  try {
+    let data = await fetch(url);
+    data = await data.text();
+    await parseTimetable(data);
+  } catch (error) {
+    console.error("Chyba pri nacitani stranky: " + error);
+  }
+}
 async function parseTimetable(html) {
   // Parses the HTML code into text
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
 
   const cells = doc.querySelectorAll(".day-item-hover");
-  console.log(cells)
-  for (const cell of cells) {
-    console.log(JSON.parse(cell.dataset.detail));
+  let teachers = [];
+  for (let i = 0; i < cells.length; i++) {
+    teachers[i] = JSON.parse(cells[i].dataset.detail)["teacher"] ;
+    console.log(teachers[i]);
   }
 }
-getData();
+getData().then();
